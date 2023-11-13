@@ -1,10 +1,13 @@
 package com.nikhil.departmentservice.service.impl;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.nikhil.departmentservice.dto.DepartmentDto;
 import com.nikhil.departmentservice.entity.Department;
+import com.nikhil.departmentservice.exception.ResourceNotFoundException;
 import com.nikhil.departmentservice.mapper.DepartmentMapper;
 import com.nikhil.departmentservice.repository.DepartmentRepository;
 import com.nikhil.departmentservice.service.DepartmentService;
@@ -53,7 +56,9 @@ ModelMapper modelMapper;
 	@Override
 	public DepartmentDto getDepartmentByCode(String departmentCode) {
 		Department department = departmentRepo.findByDepartmentCode(departmentCode);
-
+if(Optional.ofNullable(department).isEmpty()) {
+	throw new ResourceNotFoundException("Department","departmentCode",departmentCode);
+}
 		//convert  JPA entity  to DTO
 //		DepartmentDto departmentDto = new DepartmentDto(
 //				department.getId(),
