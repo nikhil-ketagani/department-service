@@ -1,5 +1,6 @@
 package com.nikhil.departmentservice.service.impl;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.nikhil.departmentservice.dto.DepartmentDto;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class DepartmentServiceImpl implements DepartmentService {
 DepartmentRepository departmentRepo;
+ModelMapper modelMapper;
 
 	public DepartmentDto saveDepartment(DepartmentDto departmentDto) {
 		//convert Department DTO to Department JPA entity
@@ -23,7 +25,11 @@ DepartmentRepository departmentRepo;
 //				departmentDto.getDepartmentDescritption(),
 //				departmentDto.getDepartmentCode()
 //				);
-		Department department = DepartmentMapper.MAPPER.mapToDepartment(departmentDto);
+		//use Mapstruct library
+//		Department department = DepartmentMapper.MAPPER.mapToDepartment(departmentDto);
+		
+		//use ModelMapper library
+		Department department = modelMapper.map(departmentDto, Department.class);
 		
 		//save Department JPA entity into database
 		Department savedDepartment = departmentRepo.save(department);
@@ -36,7 +42,9 @@ DepartmentRepository departmentRepo;
 //				savedDepartment.getDepartmentCode()
 //				);
 		//use Mapstruct library
-		DepartmentDto saveddepartmentDto = DepartmentMapper.MAPPER.mapToDepartmentDto(savedDepartment);
+//		DepartmentDto saveddepartmentDto = DepartmentMapper.MAPPER.mapToDepartmentDto(savedDepartment);
+		//use ModelMapper library
+		DepartmentDto saveddepartmentDto = modelMapper.map(savedDepartment, DepartmentDto.class);
 		return saveddepartmentDto;
 	}
 
@@ -45,8 +53,8 @@ DepartmentRepository departmentRepo;
 	@Override
 	public DepartmentDto getDepartmentByCode(String departmentCode) {
 		Department department = departmentRepo.findByDepartmentCode(departmentCode);
-		//covert Department Jpa entity to DepartmentDto
-		//convert saved JPA entity back to DTO
+
+		//convert  JPA entity  to DTO
 //		DepartmentDto departmentDto = new DepartmentDto(
 //				department.getId(),
 //				department.getDepartmentName(),
@@ -54,10 +62,14 @@ DepartmentRepository departmentRepo;
 //				department.getDepartmentCode()
 //				);
 		//use Mapstruct library
-				DepartmentDto departmentDto = DepartmentMapper.MAPPER.mapToDepartmentDto(department);
+//				DepartmentDto departmentDto = DepartmentMapper.MAPPER.mapToDepartmentDto(department);
+				
+				//use ModelMapper library
+				DepartmentDto departmentDto = modelMapper.map(department, DepartmentDto.class);
 		return departmentDto;
 	}
 
 
 
 }
+//
